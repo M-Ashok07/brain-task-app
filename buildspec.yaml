@@ -13,8 +13,8 @@ phases:
     commands:
       - echo "Logging in to Amazon ECR..."
       - aws --version
-      - ACCOUNT_ID=$(aws sts get-caller-identity --query account --output text)
-      - REPOSITORY_URI=$ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_REPO_NAME
+      -"ACCOUNT_ID=$(aws sts get-caller-identity --query account --output text)"
+      -"REPOSITORY_URI=$ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_REPO_NAME"
       - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $REPOSITORY_URI
       - echo "Setting repository URI: $REPOSITORY_URI"
 
