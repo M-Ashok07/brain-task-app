@@ -8,14 +8,14 @@ env:
     CLUSTER_NAME: brain-task-cluster
     K8S_DIR: k8s
 
-phases:
-  pre_build:
-    commands:
-      - echo Logging into ECR...
-      - 'ACCOUNT_ID=$(aws sts get-caller-identity --query account --output text)'
-      - 'REPOSITORY_URI=$ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_REPO_NAME'
-      - 'echo  REPOSITORY_URI: $REPOSITORY_URI'
-      - 'aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $REPOSITORY_URI'
+pre_build:
+  commands:
+    - echo Logging into ECR...
+    - 'ACCOUNT_ID=$(aws sts get-caller-identity --query account --output text)'
+    - 'REPOSITORY_URI=$ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_REPO_NAME'
+    - echo "AWS_REGION: $AWS_REGION"
+    - echo "REPOSITORY_URI: $REPOSITORY_URI"
+    - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $REPOSITORY_URI
 
   build:
     commands:
