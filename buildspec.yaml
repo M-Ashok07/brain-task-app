@@ -8,32 +8,28 @@ env:
     CLUSTER_NAME: brain-task-cluster
     K8S_DIR: k8s
 
-version: 0.2
-
 phases:
   pre_build:
     commands:
       - echo Logging into ECR...
-      - "AWS_REGION=ap-south-1"
-      - "IMAGE_REPO_NAME=brain-task-app"
-      - "ACCOUNT_ID=$(aws sts get-caller-identity --query account --output text)"
-      - "REPOSITORY_URI=$ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_REPO_NAME"
+      - ACCOUNT_ID=$(aws sts get-caller-identity --query account --output text)
+      - REPOSITORY_URI=$ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_REPO_NAME
       - echo "REPOSITORY_URI: $REPOSITORY_URI"
       - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $REPOSITORY_URI
-      
+
   build:
     commands:
-      - echo "Building Docker image..."
+      - echo Building Docker image...
       - docker build -t $IMAGE_REPO_NAME .
       - docker tag $IMAGE_REPO_NAME:latest $REPOSITORY_URI:$IMAGE_TAG
 
   post_build:
     commands:
-      - echo "Pushing Docker image to ECR..."
+      - echo Pushing Docker image to ECR...
       - docker push $REPOSITORY_URI:$IMAGE_TAG
-      - echo "Updating kubeconfig..."
+      - echo Updating kubeconfig...
       - aws eks update-kubeconfig --region $AWS_REGION --name $CLUSTER_NAME
-      - echo "Applying Kubernetes manifests..."
+      - echo Applying Kubernetes manifests...
       - kubectl apply -f $K8S_DIR/deployment.yaml
       - kubectl apply -f $K8S_DIR/service.yaml
       - kubectl apply -f $K8S_DIR/ingress.yaml
