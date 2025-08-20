@@ -8,17 +8,19 @@ env:
     CLUSTER_NAME: brain-task-cluster
     K8S_DIR: k8s
 
+version: 0.2
+
 phases:
   pre_build:
     commands:
-      - echo Logging in to Amazon ECR...
-      - "ACCOUNT_ID=$(aws sts get-caller-identity --query account --output text)"
-      - "AWS_REGION=ap-south-1"
-      - "REPOSITORY_URI=$ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/brain-task-app"
-      - echo "Repository URI: $REPOSITORY_URI"
-      - "aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $REPOSITORY_URI"
-
-
+      - echo Logging into ECR...
+      - AWS_REGION=ap-south-1
+      - IMAGE_REPO_NAME=brain-task-app
+      - ACCOUNT_ID=$(aws sts get-caller-identity --query account --output text)
+      - REPOSITORY_URI=$ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_REPO_NAME
+      - echo "REPOSITORY_URI: $REPOSITORY_URI"
+      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $REPOSITORY_URI
+      
   build:
     commands:
       - echo "Building Docker image..."
