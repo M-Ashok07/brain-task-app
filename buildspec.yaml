@@ -28,12 +28,9 @@ phases:
     commands:
       - echo "Pushing Docker image to ECR..."
       - docker push $REPOSITORY_URI:$IMAGE_TAG
-
       - echo "Updating kubeconfig..."
       - aws eks update-kubeconfig --region $AWS_REGION --name $CLUSTER_NAME
-
       - echo "Applying Kubernetes manifests..."
       - kubectl apply -f $K8S_DIR/deployment.yaml
       - kubectl apply -f $K8S_DIR/service.yaml
       - kubectl apply -f $K8S_DIR/ingress.yaml
-
