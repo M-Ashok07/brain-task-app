@@ -33,5 +33,5 @@ phases:
       - echo Updating kubeconfig for EKS cluster...
       - aws eks update-kubeconfig --region $AWS_REGION --name $CLUSTER_NAME
       - echo Replacing image tag in Kubernetes deployment manifest...
-      - sed -i "s|image: .*|image: $REPOSITORY_URI:$IMAGE_TAG|g" $K8S_DIR/deployment.yaml
+      - 'sed -i "s|image: .*|image: $REPOSITORY_URI:$IMAGE_TAG|g" $K8S_DIR/deployment.yaml'
       - echo Deployment complete!
