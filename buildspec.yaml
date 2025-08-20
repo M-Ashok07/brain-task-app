@@ -25,9 +25,3 @@ phases:
       - echo Pushing image to ECR...
       - docker push $REPOSITORY_URI:$IMAGE_TAG
       - sed -i "s|image: .*|image: $REPOSITORY_URI:$IMAGE_TAG|g" $K8S_DIR/deployment.yaml
-
-artifacts:
-  files:
-    - k8s/deployment.yaml
-    - k8s/service.yaml
-    - k8s/ingress.yaml
