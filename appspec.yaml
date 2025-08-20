@@ -1,0 +1,14 @@
+version: 0.0
+Resources:
+  - TargetService:
+      Type: AWS::ECS::Service  # For EKS, this still works via hooks
+      Properties:
+        TaskDefinition: imagedefinitions.json
+        LoadBalancerInfo:
+          ContainerName: "brain-task-container"
+          ContainerPort: 80
+hooks:
+  AfterAllowTestTraffic:
+    - location: scripts/kubectl-deploy.sh
+      timeout: 300
+      runas: root
